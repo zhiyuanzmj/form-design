@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "esnext",
+    "lib": ["DOM","esnext"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "jsx": "preserve",
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "skipDefaultLibCheck": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "emitDeclarationOnly": true,
+    "paths": {
+      "@/*": ["./src/*"],
+    },
+    "types":["vite/client","unplugin-vue-define-options", "vue/macros-global"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": [
+    "src/App.vue",
+    "src/main.ts",
+    "**/dist/**",
+    "**/node_modules/**"
+  ]
+}

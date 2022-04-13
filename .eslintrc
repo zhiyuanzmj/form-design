@@ -1,0 +1,32 @@
+{
+  "extends": [
+    "@antfu"
+  ],
+  "rules": {
+    "vue/max-attributes-per-line": [2, {
+      "singleline": 10,
+      "multiline": 1
+    }],
+    "vue/one-component-per-file": 0,
+    "vue/singleline-html-element-content-newline": 0,
+    "object-property-newline": 0,
+    "object-curly-newline": 0,
+    "react/react-in-jsx-scope":0,
+    "react/display-name":0,
+    "react/no-unknown-property":0,
+    "import/first": 0,
+    "prefer-const": 0,
+    "brace-style": 0,
+    "import/named":0,
+    "no-sequences": 0,
+    "vue/html-self-closing": ["error", {
+      "html": {
+        "void": "never",
+        "normal": "always",
+        "component": "always"
+      },
+      "svg": "always",
+      "math": "always"
+    }]
+  }
+}
