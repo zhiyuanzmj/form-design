@@ -1,6 +1,6 @@
 {
   "name": "@zmjs/form-design",
-  "version": "0.1.5",
+  "version": "0.1.3",
   "description": "表单设计器",
   "keywords": [
     "form-design"
@@ -13,7 +13,7 @@
   "author": "zhiyuanzmj <260480378@qq.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zhiyuanzmj/zmjs.git"
+    "url": "git+https://github.com/zhiyuanzmj/form-design.git"
   },
   "funding": "https://github.com/sponsors/zhiyuanzmj",
   "main": "dist/index.umd.js",
