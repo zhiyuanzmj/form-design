@@ -2,6 +2,7 @@
   "name": "@zmjs/form-design",
   "version": "0.1.3",
   "description": "表单设计器",
+  "packageManager": "pnpm@6.32.3",
   "keywords": [
     "form-design"
   ],
