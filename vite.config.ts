@@ -91,7 +91,7 @@ export default defineConfig({
         globals: {
           'vue': 'Vue',
           'element-plus': 'ElementPlus',
-          'draggable': 'Draggable',
+          'vuedraggable': 'vuedraggable',
         },
       },
     },
