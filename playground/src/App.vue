@@ -1,9 +1,9 @@
 <template>
-  <DesignForm />
+  <design-form />
 </template>
 
 <script lang="ts" setup>
-import { DesignForm } from './index'
+import { DesignForm } from '@zmjs/form-design'
 </script>
 
 <style>

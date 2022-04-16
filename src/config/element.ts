@@ -13,7 +13,7 @@ export interface Rules {
 export interface WidgetForm {
   list: any[]
   config: {
-    size: string
+    size: '' | 'default' | 'small' | 'large'
     hideRequiredAsterisk: boolean
     labelWidth: number
     labelPosition: string

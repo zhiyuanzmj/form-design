@@ -10,11 +10,3 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
-
-declare namespace JSX {
-  interface IntrinsicAttributes {
-    style?: string
-    title?: string
-    class?: string|object
-  }
-}

@@ -11,11 +11,12 @@ import { presetAttributify, presetIcons, presetUno, transformerDirectives } from
 import Component from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
+const resolve = p => path.resolve(__dirname, p)
 
 export default defineConfig({
   resolve: {
     alias: {
-      '@/': `${path.resolve(__dirname, 'src')}/`,
+      '@/': `${resolve('src')}/`,
     },
   },
   plugins: [
@@ -30,12 +31,13 @@ export default defineConfig({
         'vue',
         '@vueuse/core',
       ],
-      dts: './src/auto-imports.d.ts',
+      dts: resolve('src/auto-imports.d.ts'),
     }),
     Component({
       resolvers: [
         ElementPlusResolver(),
       ],
+      dts: resolve('src/components.d.ts'),
     }),
     Unocss({
       mode: 'dist-chunk',
@@ -76,7 +78,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'zmjs',
+      formats: ['es'],
       fileName: format => `index.${format}.js`,
     },
     sourcemap: true,

@@ -220,7 +220,7 @@ const handleColMoveAdd = (
 }
 
 .widget-col {
-  @apply relative m-0.5 border border-dashed border-gray-300;
+  @apply flex relative m-0.5 border border-dashed border-gray-300;
 
   &.active {
     @apply border-solid border-yellow-500 outline outline-yellow-500;

@@ -1,6 +1,6 @@
 {
   "name": "@zmjs/form-design",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "表单设计器",
   "packageManager": "pnpm@6.32.3",
   "keywords": [
@@ -24,9 +24,10 @@
     "dist"
   ],
   "scripts": {
-    "dev": "vite",
+    "dev": "vue-tsc & vite build -w",
     "build": "vite build && vue-tsc",
-    "mkdist": "mkdist -d",
+    "play": "vite playground --open",
+    "play:build": "vite build playground",
     "release": "npx bumpp --commit --tag --push"
   },
   "dependencies": {

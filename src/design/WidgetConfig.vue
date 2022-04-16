@@ -631,13 +631,13 @@ export default defineComponent({
         data.value.options.options.splice(index, 1)
     }
 
-    const handleSliderModeChange = (checked: boolean) => {
+    const handleSliderModeChange = (checked: string | number | boolean) => {
       checked
         ? (data.value.options.defaultValue = [10, 90])
         : (data.value.options.defaultValue = 0)
     }
 
-    const handleSelectModeChange = (val: boolean) => {
+    const handleSelectModeChange = (val: string | number | boolean) => {
       if (data.value.type === 'img-upload')
         return
 

@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --port 3333 --open"
+  },
+  "dependencies": {
+    "@zmjs/form-design":"workspace:*"
+  }
+}
