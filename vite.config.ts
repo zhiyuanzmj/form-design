@@ -81,6 +81,7 @@ export default defineConfig({
       formats: ['es'],
       fileName: format => `index.${format}.js`,
     },
+    reportCompressedSize: false,
     sourcemap: true,
     cssCodeSplit: true,
     rollupOptions: {

@@ -58,7 +58,7 @@ import GenerateFormItem from './GenerateFormItem.vue'
 import { element } from '@/config'
 
 export default defineComponent({
-  name: 'GenerateForm',
+  name: 'FormGenerate',
   components: {
     GenerateFormItem,
   },
@@ -177,7 +177,6 @@ export default defineComponent({
     const reset = () => {
       state.generateForm.resetFields()
     }
-
     return {
       ...toRefs(state),
       getData,

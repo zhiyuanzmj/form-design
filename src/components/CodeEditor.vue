@@ -1,78 +1,51 @@
 <template>
-  <div ref="aceRef" style="width: 100%; height: 350px;" />
+  <PrismEditor v-model="code" class="form-design-editor" :highlight="(code:any)=>{return highlight(code,languages[language])}" :readonly="readonly" line-numbers />
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs, watch } from 'vue'
-import type { Ace } from 'ace-builds'
-import ace from 'ace-builds'
+<script lang="ts" setup>
+import { PrismEditor } from 'vue-prism-editor'
+import 'vue-prism-editor/dist/prismeditor.min.css'
 
-interface State {
-  aceRef?: any
-  codeEditor?: Ace.Editor
-}
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import { highlight, languages } from 'prismjs/components/prism-core'
+import 'prismjs/components/prism-clike'
+import 'prismjs/components/prism-json'
+import 'prismjs/themes/prism-tomorrow.css'
 
-export default defineComponent({
-  name: 'CodeEditor',
-  props: {
-    value: {
-      type: String,
-      default: '',
-    },
-    language: {
-      type: String,
-      default: 'javascript',
-    },
-    theme: {
-      tyle: String,
-      default: 'github',
-    },
-    readonly: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: ['update:value'],
-  setup(props, context) {
-    const state = reactive<State>({
-      aceRef: undefined,
-      codeEditor: undefined,
-    })
+const { language = 'json', modelValue = '', readonly = false } = defineProps<{
+  modelValue: string
+  language?: string
+  readonly?: boolean
+}>()
+const emit = defineEmits(['update:modelValue'])
 
-    onMounted(() => {
-      state.codeEditor = ace.edit(state.aceRef!, {
-        mode: `ace/mode/${props.language}`,
-        theme: `ace/theme/${props.theme}`,
-        value: props.value,
-        readOnly: props.readonly,
-        fontSize: 12,
-        tabSize: 2,
-      })
-
-      state.codeEditor.on('change', () =>
-        context.emit('update:value', state.codeEditor?.getValue()),
-      )
-    })
-
-    watch(
-      () => props.value,
-      (val) => {
-        if (state.codeEditor) {
-          const currentPosition = state.codeEditor?.selection.getCursor()
-          state.codeEditor.setValue(val)
-          state.codeEditor.clearSelection()
-          state.codeEditor.gotoLine(
-            currentPosition.row + 1,
-            currentPosition.column,
-            true,
-          )
-        }
-      },
-    )
-
-    return {
-      ...toRefs(state),
-    }
-  },
+const code = $computed<string>({
+  get() { return modelValue },
+  set(val) { emit('update:modelValue', val) },
 })
 </script>
+<style lang="scss">
+.form-design-editor {
+  box-sizing: border-box;
+  padding: 10px;
+
+  /* you must provide font-family font-size line-height. Example: */
+  font-family: "Fira code", "Fira Mono", Consolas, Menlo, Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #ccc;
+
+  /* we dont use `language-` classes anymore so thats why we need to add background and text color manually */
+  background: #2d2d2d;
+
+  /* optional class for removing the outline */
+  .prism-editor__textarea:focus {
+    outline: none;
+  }
+
+  .prism-editor__line-numbers {
+    user-select: none;
+  }
+}
+</style>

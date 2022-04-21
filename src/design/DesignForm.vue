@@ -74,14 +74,11 @@
         title="JSON格式如下，直接复制生成的json覆盖此处代码点击确定即可"
         style="margin-bottom: 10px;"
       />
-      <CodeEditor v-model:value="jsonEg" language="json" />
+      <CodeEditor v-model="jsonEg" />
+
       <template #footer>
-        <el-button @click="() => (uploadJsonVisible = false)">
-          取消
-        </el-button>
-        <el-button type="primary" @click="handleUploadJson">
-          导入
-        </el-button>
+        <el-button @click="uploadJsonVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleUploadJson">导入</el-button>
       </template>
     </el-dialog>
 
@@ -92,63 +89,30 @@
         :request="request"
         :data="widgetForm"
       />
+
       <template #footer>
         <el-button @click="handleReset">重置</el-button>
-        <el-button
-          type="primary"
-
-          @click="handleGetData"
-        >
-          获取数据
-        </el-button>
+        <el-button type="primary" @click="handleGetData">获取数据</el-button>
       </template>
-
-      <el-dialog v-model="dataJsonVisible" title="获取数据" :width="800">
-        <CodeEditor :value="dataJsonTemplate" language="json" readonly />
-
-        <template #footer>
-          <el-button
-
-            @click="() => (dataJsonVisible = false)"
-          >
-            取消
-          </el-button>
-          <el-button
-            type="primary"
-
-            @click="handleCopyClick(dataJsonTemplate)"
-          >
-            Copy
-          </el-button>
-        </template>
-      </el-dialog>
     </el-dialog>
 
-    <el-dialog v-model="generateJsonVisible" title="生成JSON" :width="800">
-      <CodeEditor :value="generateJsonTemplate" language="json" readonly />
+    <el-dialog v-model="generateJsonVisible" append-to-body title="生成JSON" :width="800">
+      <CodeEditor v-model="generateJsonTemplate" readonly />
 
       <template #footer>
-        <el-button
-          @click="() => (generateJsonVisible = false)"
-        >
-          取消
-        </el-button>
-        <el-button
-          type="primary"
-          @click="handleCopyClick(generateJsonTemplate)"
-        >
-          Copy
-        </el-button>
+        <el-button @click="generateJsonVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleCopyClick(generateJsonTemplate)">复制</el-button>
       </template>
     </el-dialog>
   </section>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import type { PropType } from 'vue'
-import { defineComponent, reactive, toRefs } from 'vue'
-// import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/el-message.css'
 import { defaultsDeep } from 'lodash-es'
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import GenerateForm from '../generate/GenerateForm.vue'
 import CustomHeader from './CustomHeader.vue'
 import WidgetFormElement from './WidgetForm.vue'
@@ -157,154 +121,124 @@ import FormConfig from './FormConfig.vue'
 import ComponentGroup from '@/components/ComponentGroup.vue'
 import CodeEditor from '@/components/CodeEditor.vue'
 import { element } from '@/config'
-import { copy } from '@/utils'
 import type { WidgetForm } from '@/config/element'
 
-export default defineComponent({
-  name: 'DesignForm',
-  components: {
-    CustomHeader,
-    ComponentGroup,
-    CodeEditor,
-    WidgetFormElement,
-    GenerateForm,
-    WidgetConfig,
-    FormConfig,
+defineOptions({ name: 'DesignForm' })
+
+defineProps({
+  preview: {
+    type: Boolean,
+    default: true,
   },
-  props: {
-    preview: {
-      type: Boolean,
-      default: true,
-    },
-    generateJson: {
-      type: Boolean,
-      default: true,
-    },
-    uploadJson: {
-      type: Boolean,
-      default: true,
-    },
-    clearable: {
-      type: Boolean,
-      default: true,
-    },
-    basicFields: {
-      type: Array as PropType<Array<string>>,
-      default: () => [
-        'input',
-        'password',
-        'textarea',
-        'number',
-        'radio',
-        'checkbox',
-        'time',
-        'date',
-        'rate',
-        'select',
-        'switch',
-        'slider',
-        'text',
-      ],
-    },
-    advanceFields: {
-      type: Array as PropType<Array<string>>,
-      default: () => ['img-upload', 'download', 'cascader'],
-    },
-    layoutFields: {
-      type: Array as PropType<Array<string>>,
-      default: () => ['grid', 'table', 'divider'],
-    },
-    request: {
-      type: Function,
-    },
+  generateJson: {
+    type: Boolean,
+    default: true,
   },
-  setup() {
-    const state = reactive({
-      element,
-      widgetForm: element.widgetForm(),
-      widgetFormSelect: undefined,
-      generateFormRef: null as any,
-      configTab: 'widget',
-      previewVisible: false,
-      uploadJsonVisible: false,
-      dataJsonVisible: false,
-      generateJsonVisible: false,
-      generateJsonTemplate: JSON.stringify(element.widgetForm(), null, 2),
-      dataJsonTemplate: '',
-      jsonEg: JSON.stringify(element.widgetForm(), null, 2),
-    })
-
-    const handleUploadJson = () => {
-      try {
-        state.widgetForm.list = []
-        state.widgetForm = defaultsDeep(
-          JSON.parse(state.jsonEg),
-          state.widgetForm,
-        )
-
-        if (state.widgetForm.list)
-          state.widgetFormSelect = state.widgetForm.list[0]
-
-        state.uploadJsonVisible = false
-        // ElMessage.success('上传成功')
-      }
-      catch (error) {
-        // ElMessage.error('上传失败')
-      }
-    }
-
-    const handleCopyClick = (text: string) => {
-      copy(text)
-      // ElMessage.success('Copy成功')
-    }
-
-    const handleGetData = () => {
-      state.generateFormRef.getData().then((res: any) => {
-        state.dataJsonTemplate = JSON.stringify(res, null, 2)
-        state.dataJsonVisible = true
-      })
-    }
-
-    const handleGenerateJson = () =>
-      (state.generateJsonTemplate = JSON.stringify(
-        state.widgetForm,
-        null,
-        2,
-      )) && (state.generateJsonVisible = true)
-
-    const handleClearable = () => {
-      state.widgetForm.list = []
-      state.widgetForm = defaultsDeep(element.widgetForm(), state.widgetForm)
-      state.widgetFormSelect = undefined
-    }
-
-    const handleReset = () => state.generateFormRef.reset()
-
-    const getJson = () => state.widgetForm
-
-    const setJson = (json: WidgetForm) => {
-      state.widgetForm.list = []
-      state.widgetForm = defaultsDeep(json, state.widgetForm)
-      if (json.list.length)
-        state.widgetFormSelect = json.list[0]
-    }
-
-    const clear = () => handleClearable()
-
-    return {
-      ...toRefs(state),
-      handleUploadJson,
-      handleCopyClick,
-      handleGetData,
-      handleGenerateJson,
-      handleClearable,
-      handleReset,
-      getJson,
-      setJson,
-      clear,
-    }
+  uploadJson: {
+    type: Boolean,
+    default: true,
+  },
+  clearable: {
+    type: Boolean,
+    default: true,
+  },
+  basicFields: {
+    type: Array as PropType<Array<string>>,
+    default: () => [
+      'input',
+      'password',
+      'textarea',
+      'number',
+      'radio',
+      'checkbox',
+      'time',
+      'date',
+      'rate',
+      'select',
+      'switch',
+      'slider',
+      'text',
+    ],
+  },
+  advanceFields: {
+    type: Array as PropType<Array<string>>,
+    default: () => ['img-upload', 'download', 'cascader'],
+  },
+  layoutFields: {
+    type: Array as PropType<Array<string>>,
+    default: () => ['grid', 'table', 'divider'],
+  },
+  request: {
+    type: Function,
   },
 })
+let widgetForm = $ref(element.widgetForm())
+let widgetFormSelect = $ref<any>()
+let generateFormRef = $ref<typeof GenerateForm>()
+let configTab = $ref('widget')
+let previewVisible = $ref(false)
+let uploadJsonVisible = $ref(false)
+let generateJsonVisible = $ref(false)
+let generateJsonTemplate = $ref(JSON.stringify(element.widgetForm(), null, 2))
+let jsonEg = $ref(JSON.stringify(element.widgetForm(), null, 2))
+
+const handleUploadJson = () => {
+  try {
+    widgetForm.list = []
+    widgetForm = defaultsDeep(
+      JSON.parse(jsonEg),
+      widgetForm,
+    )
+
+    if (widgetForm.list)
+      widgetFormSelect = widgetForm.list[0]
+
+    uploadJsonVisible = false
+    ElMessage.success('上传成功')
+  }
+  catch (error) {
+    ElMessage.error('上传失败')
+  }
+}
+
+const handleCopyClick = (text: string) => {
+  navigator.clipboard.writeText(text)
+  ElMessage.success({ message: 'Copy成功', customClass: '!z1-[2005]', duration: 300000 })
+}
+
+const handleGetData = () => {
+  generateFormRef.getData().then((res: any) => {
+    generateJsonTemplate = JSON.stringify(res, null, 2)
+    generateJsonVisible = true
+  })
+}
+
+const handleGenerateJson = () =>
+  (generateJsonTemplate = JSON.stringify(
+    widgetForm,
+    null,
+    2,
+  )) && (generateJsonVisible = true)
+
+const handleClearable = () => {
+  widgetForm.list = []
+  widgetForm = defaultsDeep(element.widgetForm(), widgetForm)
+  widgetFormSelect = undefined
+}
+
+const handleReset = () => generateFormRef.reset()
+
+defineExpose({
+  getJson: () => widgetForm,
+  setJson: (json: WidgetForm) => {
+    widgetForm.list = []
+    widgetForm = defaultsDeep(json, widgetForm)
+    if (json.list.length)
+      widgetFormSelect = json.list[0]
+  },
+  clear: () => handleClearable(),
+})
+
 </script>
 <style lang="scss">
   .config-tab {

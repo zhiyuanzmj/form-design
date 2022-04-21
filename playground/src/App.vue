@@ -1,5 +1,5 @@
 <template>
-  <design-form />
+  <DesignForm :preview="true" />
 </template>
 
 <script lang="ts" setup>

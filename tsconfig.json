@@ -9,13 +9,13 @@
     "jsx": "preserve",
     "strictNullChecks": true,
     "resolveJsonModule": true,
-    "skipDefaultLibCheck": true,
     "declaration": true,
+    "isolatedModules": true,
     "skipLibCheck": true,
     "outDir": "dist",
     "emitDeclarationOnly": true,
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
     "types":["vite/client","unplugin-vue-define-options", "vue/macros-global"]
   },
