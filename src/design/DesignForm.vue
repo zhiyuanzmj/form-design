@@ -229,7 +229,7 @@ const handleClearable = () => {
 const handleReset = () => generateFormRef.reset()
 
 defineExpose({
-  getJson: () => widgetForm,
+  getJson: () => $$(widgetForm).value,
   setJson: (json: WidgetForm) => {
     widgetForm.list = []
     widgetForm = defaultsDeep(json, widgetForm)
