@@ -55,7 +55,7 @@
 import { defineComponent, reactive, toRefs, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import GenerateFormItem from './GenerateFormItem.vue'
-import { element } from '@/config'
+import { getWidgetForm } from '@/config'
 
 export default defineComponent({
   name: 'FormGenerate',
@@ -65,7 +65,7 @@ export default defineComponent({
   props: {
     data: {
       type: Object,
-      default: element.widgetForm(),
+      default: getWidgetForm(),
     },
     value: {
       type: Object,
@@ -86,7 +86,7 @@ export default defineComponent({
       rules: {} as any,
       widgetForm:
         (props.data && JSON.parse(JSON.stringify(props.data)))
-        ?? element.widgetForm(),
+        ?? getWidgetForm(),
     })
 
     const generateModel = (list: any[]) => {
@@ -148,7 +148,7 @@ export default defineComponent({
       () => props.data,
       (val) => {
         state.widgetForm
-          = (val && JSON.parse(JSON.stringify(val))) ?? element.widgetForm()
+          = (val && JSON.parse(JSON.stringify(val))) ?? getWidgetForm()
         state.model = {}
         state.rules = {}
         generateModel(state.widgetForm.list)

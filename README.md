@@ -1,4 +1,4 @@
-# vue-form-create
+# @zmjs/form-create
 
 基于 Vue3.0 + vite + element-plus + TS 的自定义表单生成器。
 
@@ -43,13 +43,13 @@ createApp(App)
 ```
 ## 2 组件说明
 
-### 表单设计器（FormDesign）
+### 表单设计器（DesignForm）
 
 #### 示例
 
 ```html
 <template>
-  <FormDesign ref="formDesign" />
+  <DesignForm ref="designForm" />
 </template>
 ```
 

@@ -1,31 +1,30 @@
 <template>
-  <section class="h-full bg-white flex">
-    <aside width="250px" class="pt-2 w-62">
+  <section h-full bg-white flex>
+    <aside pt-2 w-62>
       <ComponentGroup
         title="基础字段"
         :fields="basicFields"
-        :list="element.basicComponents"
+        :list="basicComponents"
       />
       <ComponentGroup
         title="高级字段"
         :fields="advanceFields"
-        :list="element.advanceComponents"
+        :list="advanceComponents"
       />
       <ComponentGroup
         title="布局字段"
         :fields="layoutFields"
-        :list="element.layoutComponents"
+        :list="layoutComponents"
       />
     </aside>
 
-    <main class="border-0 border-x border-solid border-gray-200 flex flex-col flex-nowrap flex-1">
+    <main b="0 x solid gray-200" flex="~ 1 col nowrap">
       <CustomHeader
         :preview="preview"
         :upload-json="uploadJson"
         :generate-json="generateJson"
         :clearable="clearable"
         @preview="() => (previewVisible = true)"
-        @upload-json="() => (uploadJsonVisible = true)"
         @generate-json="handleGenerateJson"
         @clearable="handleClearable"
       >
@@ -38,53 +37,28 @@
       />
     </main>
 
-    <aside class="relative w-75">
-      <header class="h-11 px-2 grid grid-cols-2 border-0 border-b-1 border-solid border-gray-200">
-        <div
-          class="config-tab"
-          :class="{ active: configTab === 'widget' }"
-          @click="configTab = 'widget'"
-        >
+    <aside relative w-75 flex="~ col">
+      <header b="0 b-1 solid gray-200" grid="~ cols-2" min-h-11 px-2>
+        <div :class="`${configTab === 'widget'?'active':''} config-tab`" @click="configTab = 'widget'">
           字段属性
         </div>
-        <div
-          class="config-tab cursor-pointer"
-          :class="{ active: configTab === 'form' }"
-          @click="configTab = 'form'"
-        >
+        <div :class="`${configTab === 'form'?'active':''} config-tab`" @click="configTab = 'form'">
           表单属性
         </div>
       </header>
 
-      <div class="p-2">
-        <WidgetConfig
-          v-show="configTab === 'widget'"
-          v-model:select="widgetFormSelect"
-        />
-        <FormConfig
-          v-show="configTab === 'form'"
-          v-model:config="widgetForm.config"
-        />
-      </div>
+      <WidgetConfig
+        v-show="configTab === 'widget'"
+        v-model:select="widgetFormSelect"
+      />
+      <FormConfig
+        v-show="configTab === 'form'"
+        v-model:config="widgetForm.config"
+      />
     </aside>
 
-    <el-dialog v-model="uploadJsonVisible" title="导入JSON" :width="800">
-      <el-alert
-        type="info"
-        title="JSON格式如下，直接复制生成的json覆盖此处代码点击确定即可"
-        style="margin-bottom: 10px;"
-      />
-      <CodeEditor v-model="jsonEg" />
-
-      <template #footer>
-        <el-button @click="uploadJsonVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleUploadJson">导入</el-button>
-      </template>
-    </el-dialog>
-
-    <el-dialog v-model="previewVisible" title="预览" :width="800">
+    <el-dialog v-model="previewVisible" destroy-on-close title="预览" :z-index="2000" :width="800">
       <GenerateForm
-        v-if="previewVisible"
         ref="generateFormRef"
         :request="request"
         :data="widgetForm"
@@ -96,12 +70,12 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="generateJsonVisible" append-to-body title="生成JSON" :width="800">
-      <CodeEditor v-model="generateJsonTemplate" readonly />
+    <el-dialog v-model="generateJsonVisible" :model-append-to-body="false" append-to-body title="修改JSON" :z-index="2000" :width="800">
+      <CodeEditor v-model="generateJsonTemplate" max-h-xl />
 
       <template #footer>
-        <el-button @click="generateJsonVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleCopyClick(generateJsonTemplate)">复制</el-button>
+        <el-button @click="handleCopyClick(generateJsonTemplate)">复制</el-button>
+        <el-button type="primary" @click="handleUploadJson(generateJsonTemplate)">确认修改</el-button>
       </template>
     </el-dialog>
   </section>
@@ -120,8 +94,8 @@ import WidgetConfig from './WidgetConfig.vue'
 import FormConfig from './FormConfig.vue'
 import ComponentGroup from '@/components/ComponentGroup.vue'
 import CodeEditor from '@/components/CodeEditor.vue'
-import { element } from '@/config'
-import type { WidgetForm } from '@/config/element'
+import type { WidgetForm } from '@/config'
+import { advanceComponents, advanceFields, basicComponents, basicFields, getWidgetForm, layoutComponents, layoutFields } from '@/config'
 
 defineOptions({ name: 'DesignForm' })
 
@@ -143,61 +117,46 @@ defineProps({
     default: true,
   },
   basicFields: {
-    type: Array as PropType<Array<string>>,
-    default: () => [
-      'input',
-      'password',
-      'textarea',
-      'number',
-      'radio',
-      'checkbox',
-      'time',
-      'date',
-      'rate',
-      'select',
-      'switch',
-      'slider',
-      'text',
-    ],
+    type: Array as PropType<typeof basicFields>,
+    default: () => basicFields,
   },
   advanceFields: {
-    type: Array as PropType<Array<string>>,
-    default: () => ['img-upload', 'download', 'cascader'],
+    type: Array as PropType<typeof advanceFields>,
+    default: () => advanceFields,
   },
   layoutFields: {
-    type: Array as PropType<Array<string>>,
-    default: () => ['grid', 'table', 'divider'],
+    type: Array as PropType<typeof layoutFields>,
+    default: () => layoutFields,
   },
   request: {
     type: Function,
   },
 })
-let widgetForm = $ref(element.widgetForm())
+
+let widgetForm = $ref(getWidgetForm())
 let widgetFormSelect = $ref<any>()
-let generateFormRef = $ref<typeof GenerateForm>()
-let configTab = $ref('widget')
+let generateFormRef = $ref<InstanceType<typeof GenerateForm>|null>(null)
+let configTab = $ref('form')
 let previewVisible = $ref(false)
-let uploadJsonVisible = $ref(false)
 let generateJsonVisible = $ref(false)
-let generateJsonTemplate = $ref(JSON.stringify(element.widgetForm(), null, 2))
-let jsonEg = $ref(JSON.stringify(element.widgetForm(), null, 2))
+let generateJsonTemplate = $ref(JSON.stringify(getWidgetForm(), null, 2))
 
 const handleUploadJson = () => {
   try {
     widgetForm.list = []
     widgetForm = defaultsDeep(
-      JSON.parse(jsonEg),
+      JSON.parse(generateJsonTemplate),
       widgetForm,
     )
 
     if (widgetForm.list)
       widgetFormSelect = widgetForm.list[0]
 
-    uploadJsonVisible = false
-    ElMessage.success('上传成功')
+    generateJsonVisible = false
+    ElMessage.success('修改成功')
   }
   catch (error) {
-    ElMessage.error('上传失败')
+    ElMessage.error('修改失败，请检查JSON格式是否正确。')
   }
 }
 
@@ -207,7 +166,7 @@ const handleCopyClick = (text: string) => {
 }
 
 const handleGetData = () => {
-  generateFormRef.getData().then((res: any) => {
+  generateFormRef?.getData().then((res: any) => {
     generateJsonTemplate = JSON.stringify(res, null, 2)
     generateJsonVisible = true
   })
@@ -222,11 +181,11 @@ const handleGenerateJson = () =>
 
 const handleClearable = () => {
   widgetForm.list = []
-  widgetForm = defaultsDeep(element.widgetForm(), widgetForm)
+  widgetForm = defaultsDeep(getWidgetForm(), widgetForm)
   widgetFormSelect = undefined
 }
 
-const handleReset = () => generateFormRef.reset()
+const handleReset = () => generateFormRef?.reset()
 
 defineExpose({
   getJson: () => $$(widgetForm).value,
@@ -242,11 +201,12 @@ defineExpose({
 </script>
 <style lang="scss">
   .config-tab {
-    @apply cursor-pointer text-sm text-gray-700 flex items-center justify-center;
-    @apply border-0 border-b-2 border-solid border-white;
+    @apply cursor-pointer text-sm text-gray-700
+      flex items-center justify-center
+      b-0 b-b-2 b-solid b-white;
 
     &.active {
-      @apply border-blue-400;
+      @apply b-blue-400;
     }
   }
 </style>

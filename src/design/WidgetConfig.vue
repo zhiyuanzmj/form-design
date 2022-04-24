@@ -1,5 +1,5 @@
 <template>
-  <el-form v-if="data" :key="data.key" label-position="top">
+  <el-form v-if="data" :key="data.key" label-position="top" p-2 flex-1 overflow-auto>
     <el-form-item v-if="!['grid'].includes(data.type)" label="字段标识">
       <el-input v-model="data.model" />
     </el-form-item>

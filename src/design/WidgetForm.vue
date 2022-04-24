@@ -83,7 +83,7 @@
 import Draggable from 'vuedraggable'
 import { cloneDeep } from 'lodash-es'
 import WidgetFormItem from './WidgetFormItem.vue'
-import type { WidgetForm } from '@/config/element'
+import type { WidgetForm } from '@/config'
 
 const handleListInsert = (key: string, list: any[], obj: any) => {
   const newList: any[] = []

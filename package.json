@@ -33,7 +33,7 @@
   "dependencies": {
     "@vueuse/core": "^8.2.3",
     "ace-builds": "^1.4.14",
-    "element-plus": "^2.1.8",
+    "element-plus": "^2.1.10",
     "lodash-es": "^4.17.21",
     "prismjs": "^1.28.0",
     "vue": "^3.2.31",
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.18.9",
+    "@iconify/json": "^2.1.31",
     "@iconify/utils": "^1.0.32",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^17.0.23",

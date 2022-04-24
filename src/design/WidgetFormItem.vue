@@ -281,7 +281,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { WidgetForm } from '@/config/element'
+import type { WidgetForm } from '@/config'
 
 defineProps<{
   config: WidgetForm['config']

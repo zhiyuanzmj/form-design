@@ -25,7 +25,7 @@
 import { cloneDeep } from 'lodash-es'
 import Draggable from 'vuedraggable'
 
-defineProps<{ fields: string[]; title: string; list: any[] }>()
+defineProps<{ fields: any[]; title: string; list: any[] }>()
 
 function clone(params: any) {
   const key = Math.random().toString(36).substring(2, 9)

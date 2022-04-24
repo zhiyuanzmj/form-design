@@ -6,7 +6,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     CodeEditor: typeof import('./components/CodeEditor.vue')['default']
     ComponentGroup: typeof import('./components/ComponentGroup.vue')['default']
-    ElAlert: typeof import('element-plus/es')['ElAlert']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCascader: typeof import('element-plus/es')['ElCascader']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
