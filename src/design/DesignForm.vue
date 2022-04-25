@@ -19,17 +19,19 @@
     </aside>
 
     <main b="0 x solid gray-200" flex="~ 1 col nowrap">
-      <CustomHeader
-        :preview="preview"
-        :upload-json="uploadJson"
-        :generate-json="generateJson"
-        :clearable="clearable"
-        @preview="() => (previewVisible = true)"
-        @generate-json="handleGenerateJson"
-        @clearable="handleClearable"
-      >
-        <slot name="header" />
-      </CustomHeader>
+      <header b="0 b solid gray-200" flex gap-2 items-center justify-end h-11 py-0 px-2>
+        <slot />
+        <el-button v-if="generateJson" type="text" @click="handleGenerateJson">
+          <template #icon><i class="ep:edit" /></template>修改
+        </el-button>
+        <el-button v-if="clearable" type="text" @click="handleClearable">
+          <template #icon><i class="custom:clearable" /></template>清空
+        </el-button>
+        <el-button v-if="preview" type="text" @click="previewVisible = true">
+          <template #icon><i class="custom:preview" /></template>预览
+        </el-button>
+      </header>
+
       <WidgetFormElement
         ref="widgetFormRef"
         v-model:widgetForm="widgetForm"
@@ -39,39 +41,41 @@
 
     <aside relative w-75 flex="~ col">
       <header b="0 b-1 solid gray-200" grid="~ cols-2" min-h-11 px-2>
-        <div :class="`${configTab === 'widget'?'active':''} config-tab`" @click="configTab = 'widget'">
+        <div :class="`${!tab?'active':''} config-tab`" @click="tab = 0">
           字段属性
         </div>
-        <div :class="`${configTab === 'form'?'active':''} config-tab`" @click="configTab = 'form'">
+        <div :class="`${tab?'active':''} config-tab`" @click="tab = 1">
           表单属性
         </div>
       </header>
 
       <WidgetConfig
-        v-show="configTab === 'widget'"
+        v-show="!tab"
         v-model:select="widgetFormSelect"
       />
       <FormConfig
-        v-show="configTab === 'form'"
+        v-show="tab"
         v-model:config="widgetForm.config"
       />
     </aside>
 
-    <el-dialog v-model="previewVisible" destroy-on-close title="预览" :z-index="2000" :width="800">
+    <el-dialog v-model="previewVisible" destroy-on-close title="预览" :z-index="2000" :width="800" @close="dataVisible=false">
+      <CodeEditor v-if="dataVisible" v-model="generateJsonTemplate" />
       <GenerateForm
+        v-else
         ref="generateFormRef"
         :request="request"
         :data="widgetForm"
       />
 
       <template #footer>
-        <el-button @click="handleReset">重置</el-button>
-        <el-button type="primary" @click="handleGetData">获取数据</el-button>
+        <el-button @click="dataVisible?handleCopyClick(generateJsonTemplate):handleReset()">{{ dataVisible?'复制':'重置' }}</el-button>
+        <el-button type="primary" @click="handleGetData">{{ dataVisible?'返回预览':'获取数据' }}</el-button>
       </template>
     </el-dialog>
 
     <el-dialog v-model="generateJsonVisible" :model-append-to-body="false" append-to-body title="修改JSON" :z-index="2000" :width="800">
-      <CodeEditor v-model="generateJsonTemplate" max-h-xl />
+      <CodeEditor v-model="generateJsonTemplate" />
 
       <template #footer>
         <el-button @click="handleCopyClick(generateJsonTemplate)">复制</el-button>
@@ -85,10 +89,8 @@
 import type { PropType } from 'vue'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
-import { defaultsDeep } from 'lodash-es'
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import GenerateForm from '../generate/GenerateForm.vue'
-import CustomHeader from './CustomHeader.vue'
 import WidgetFormElement from './WidgetForm.vue'
 import WidgetConfig from './WidgetConfig.vue'
 import FormConfig from './FormConfig.vue'
@@ -105,10 +107,6 @@ defineProps({
     default: true,
   },
   generateJson: {
-    type: Boolean,
-    default: true,
-  },
-  uploadJson: {
     type: Boolean,
     default: true,
   },
@@ -133,25 +131,19 @@ defineProps({
   },
 })
 
-let widgetForm = $ref(getWidgetForm())
+let tab = $ref(0)
 let widgetFormSelect = $ref<any>()
-let generateFormRef = $ref<InstanceType<typeof GenerateForm>|null>(null)
-let configTab = $ref('form')
-let previewVisible = $ref(false)
+watch(() => widgetFormSelect, (val) => {
+  tab = val ? 0 : 1
+})
+
+let widgetForm = $ref(getWidgetForm())
 let generateJsonVisible = $ref(false)
 let generateJsonTemplate = $ref(JSON.stringify(getWidgetForm(), null, 2))
-
 const handleUploadJson = () => {
   try {
-    widgetForm.list = []
-    widgetForm = defaultsDeep(
-      JSON.parse(generateJsonTemplate),
-      widgetForm,
-    )
-
-    if (widgetForm.list)
-      widgetFormSelect = widgetForm.list[0]
-
+    widgetForm = JSON.parse(generateJsonTemplate)
+    widgetFormSelect = widgetForm.list?.[0]
     generateJsonVisible = false
     ElMessage.success('修改成功')
   }
@@ -160,42 +152,39 @@ const handleUploadJson = () => {
   }
 }
 
-const handleCopyClick = (text: string) => {
-  navigator.clipboard.writeText(text)
-  ElMessage.success({ message: 'Copy成功', customClass: '!z1-[2005]', duration: 300000 })
-}
-
-const handleGetData = () => {
-  generateFormRef?.getData().then((res: any) => {
-    generateJsonTemplate = JSON.stringify(res, null, 2)
-    generateJsonVisible = true
-  })
-}
-
 const handleGenerateJson = () =>
-  (generateJsonTemplate = JSON.stringify(
-    widgetForm,
-    null,
-    2,
-  )) && (generateJsonVisible = true)
+  (generateJsonTemplate = JSON.stringify(widgetForm, null, 2))
+  && (generateJsonVisible = true)
 
 const handleClearable = () => {
-  widgetForm.list = []
-  widgetForm = defaultsDeep(getWidgetForm(), widgetForm)
+  widgetForm = getWidgetForm()
   widgetFormSelect = undefined
 }
 
+let dataVisible = $ref(false)
+let generateFormRef = $ref<InstanceType<typeof GenerateForm>|null>(null)
+const handleGetData = async() => {
+  dataVisible = !dataVisible
+  if (!dataVisible) return
+  const res = await generateFormRef?.getData()
+  generateJsonTemplate = JSON.stringify(res, null, 2)
+}
 const handleReset = () => generateFormRef?.reset()
+
+const handleCopyClick = (text: string) => {
+  navigator.clipboard.writeText(text)
+  ElMessage.success({ message: 'Copy成功' })
+}
+
+let previewVisible = $ref(false)
 
 defineExpose({
   getJson: () => $$(widgetForm).value,
   setJson: (json: WidgetForm) => {
-    widgetForm.list = []
-    widgetForm = defaultsDeep(json, widgetForm)
-    if (json.list.length)
-      widgetFormSelect = json.list[0]
+    widgetForm = json
+    widgetFormSelect = json.list?.[0]
   },
-  clear: () => handleClearable(),
+  clear: handleClearable,
 })
 
 </script>

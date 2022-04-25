@@ -1,5 +1,5 @@
 <template>
-  <PrismEditor v-model="code" class="form-design-editor" :highlight="(code:any)=>{return highlight(code,languages[language])}" :readonly="readonly" line-numbers />
+  <PrismEditor v-model="code" max-h-xl class="form-design-editor" :highlight="(code:any)=>{return highlight(code,languages[language])}" :readonly="readonly" line-numbers />
 </template>
 
 <script lang="ts" setup>
