@@ -6,7 +6,7 @@
     tag="ul"
     class="m-0 p-3 pt-0 grid grid-cols-2 gap-1"
     item-key="type"
-    :group="{ name: 'people', pull: 'clone', put: false }"
+    :group="{ name: 'form-design', pull: 'clone', put: false }"
     :clone="clone"
     :sort="false"
     :list="list"

@@ -1,21 +1,21 @@
 <template>
   <el-form
     label-suffix=":"
-    class="flex flex-1 bg-gray-50 relative"
+    bg-gray-50 relative flex="~ 1"
     :size="widgetForm.config.size"
     :label-position="widgetForm.config.labelPosition"
     :label-width="`${widgetForm.config.labelWidth}px`"
     :hide-required-asterisk="widgetForm.config.hideRequiredAsterisk"
   >
-    <div v-if="!widgetForm.list?.length" class="text-gray-400 text-lg  absolute top-50 left-1/2 -translate-x-1/2">
+    <div v-if="!widgetForm.list?.length" text="gray-400 lg" absolute top-50 left="1/2" translate-x="-1/2">
       从左侧拖拽来添加字段
     </div>
     <Draggable
-      class="flex-1 m-2 bg-white border border-dashed border-gray-400"
+      class="flex-1 m-2 bg-white shadow p-1"
       item-key="key"
       handle=".cursor-move"
       :animation="200"
-      group="people"
+      group="form-design"
       :list="widgetForm.list"
       @add="handleMoveAdd"
     >
@@ -31,12 +31,12 @@
           <Draggable
             v-for="(col, colIndex) of element.columns"
             :key="colIndex"
-            class="w-full bg-white min-h-12 border border-dashed border-gray-300"
+            class="bg-white min-h-12 border border-dashed border-gray-300"
             :style="`grid-column: span ${col.span}`"
             item-key="key"
             handle=".cursor-move"
             :animation="200"
-            group="people"
+            group="form-design"
             :no-transition-on-drag="true"
             :list="col.list"
             @add="handleColMoveAdd($event, element, colIndex)"
@@ -54,11 +54,11 @@
           </Draggable>
 
           <template v-if="widgetFormSelect?.key === element.key">
-            <div class="absolute left-0 -top-0.5 bg-yellow-500 text-white p-1 text-sm cursor-move">
-              <i class="custom:move" />
+            <div absolute left-0 top="-0.5" bg-yellow-500 p=".5 l-0 t-0" text="white" cursor-move>
+              <i class="eva:move-outline" text-lg />
             </div>
-            <div class="absolute right-0 -bottom-0.5 bg-yellow-500 text-white flex gap-1 p-1 text-sm cursor-pointer">
-              <i class="custom:delete" @click.stop="handleDeleteClick(index, widgetForm.list)" />
+            <div absolute right-0 bottom="-0.5" bg-yellow-500 flex gap-1 p="1 r-.5" text-white cursor-pointer>
+              <i class="fa6-regular:trash-can" @click.stop="handleDeleteClick(index, widgetForm.list)" />
             </div>
           </template>
         </div>

@@ -46,7 +46,7 @@
     </main>
 
     <aside relative w-75 flex="~ col">
-      <header b="0 b-1 solid gray-200" grid="~ cols-2" min-h-11 px-2>
+      <header border="0 b-1 gray-200" grid="~ cols-2" min-h-11 px-2>
         <div :class="`${!tab?'active':''} config-tab`" @click="tab = 0">
           字段属性
         </div>
@@ -206,10 +206,10 @@ defineExpose({
   .config-tab {
     @apply cursor-pointer text-sm text-gray-700
       flex items-center justify-center
-      b-0 b-b-2 b-solid b-white;
+      border-0 border-b-2 border-white;
 
     &.active {
-      @apply b-blue-500;
+      @apply border-blue-500;
     }
   }
 </style>

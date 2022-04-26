@@ -246,7 +246,7 @@
                     circle
                     @click="handleOptionsRemove(index)"
                   >
-                    <i class="custom:delete" />
+                    <i class="fa6-regular:trash-can" />
                   </el-button>
                 </div>
               </template>
@@ -293,7 +293,7 @@
                     circle
                     @click="handleOptionsRemove(index)"
                   >
-                    <i class="custom:delete" />
+                    <i class="fa6-regular:trash-can" />
                   </el-button>
                 </div>
               </template>
@@ -441,7 +441,7 @@
                 style="margin-left: 5px;"
                 @click="data.columns.splice(index, 1)"
               >
-                <i class="custom:delete" />
+                <i class="fa6-regular:trash-can" />
               </el-button>
             </li>
           </template>
@@ -498,7 +498,7 @@
                 style="margin-left: 5px;"
                 @click="handleOptionsRemove(index)"
               >
-                <i class="custom:delete" />
+                <i class="fa6-regular:trash-can" />
               </el-button>
             </li>
           </template>
@@ -563,7 +563,7 @@
       </el-form-item>
 
       <template v-if="hasKey('rules')">
-        <h4 class="pb-2 text-gray-700 border-0 border-b-1 border-solid border-gray-200">
+        <h4 class="pb-2 text-gray-700 border-0 border-b-1 border-gray-200">
           验证规则
         </h4>
 

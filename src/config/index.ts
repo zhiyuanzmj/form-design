@@ -360,7 +360,7 @@ export const layoutComponents = [
       },
     ],
     options: {
-      gutter: 1,
+      gutter: 0,
       align: 'initial',
     },
   },
