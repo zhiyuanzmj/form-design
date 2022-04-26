@@ -7,7 +7,9 @@
     :label-width="`${widgetForm.config.labelWidth}px`"
     :hide-required-asterisk="widgetForm.config.hideRequiredAsterisk"
   >
-    <div v-if="!widgetForm.list?.length" class="text-gray-400 text-lg  absolute top-50 left-1/2 -translate-x-1/2">从左侧拖拽来添加字段</div>
+    <div v-if="!widgetForm.list?.length" class="text-gray-400 text-lg  absolute top-50 left-1/2 -translate-x-1/2">
+      从左侧拖拽来添加字段
+    </div>
     <Draggable
       class="flex-1 m-2 bg-white border border-dashed border-gray-400"
       item-key="key"
@@ -18,43 +20,38 @@
       @add="handleMoveAdd"
     >
       <template #item="{ element, index }">
-        <el-row
+        <div
           v-if="element.type === 'grid'"
-          class="widget-col p-1 widget-view"
-          type="flex"
+          class="widget-col"
+          p-1 grid="~ cols-24"
           :class="{ active: widgetFormSelect?.key === element.key }"
-          :gutter="element.options.gutter ?? 0"
-          :justify="element.options.justify"
-          :align="element.options.align"
+          :style="`gap: ${element.options.gutter}px; align-items: ${element.options.align};`"
           @click="handleItemClick(element)"
         >
-          <el-col
+          <Draggable
             v-for="(col, colIndex) of element.columns"
             :key="colIndex"
-            :span="col.span ?? 0"
+            class="w-full bg-white min-h-12 border border-dashed border-gray-300"
+            :style="`grid-column: span ${col.span}`"
+            item-key="key"
+            handle=".cursor-move"
+            :animation="200"
+            group="people"
+            :no-transition-on-drag="true"
+            :list="col.list"
+            @add="handleColMoveAdd($event, element, colIndex)"
           >
-            <Draggable
-              class="bg-white min-h-12 border border-dashed border-gray-300"
-              item-key="key"
-              handle=".cursor-move"
-              :animation="200"
-              group="people"
-              :no-transition-on-drag="true"
-              :list="col.list"
-              @add="handleColMoveAdd($event, element, colIndex)"
-            >
-              <template #item="{ element, index }">
-                <WidgetFormItem
-                  :element="element"
-                  :config="widgetForm.config"
-                  :select-widget="widgetFormSelect"
-                  @click.stop="handleItemClick(element)"
-                  @copy="handleCopyClick(index, col.list)"
-                  @delete="handleDeleteClick(index, col.list)"
-                />
-              </template>
-            </Draggable>
-          </el-col>
+            <template #item="{ element, index }">
+              <WidgetFormItem
+                :element="element"
+                :config="widgetForm.config"
+                :select-widget="widgetFormSelect"
+                @click.stop="handleItemClick(element)"
+                @copy="handleCopyClick(index, col.list)"
+                @delete="handleDeleteClick(index, col.list)"
+              />
+            </template>
+          </Draggable>
 
           <template v-if="widgetFormSelect?.key === element.key">
             <div class="absolute left-0 -top-0.5 bg-yellow-500 text-white p-1 text-sm cursor-move">
@@ -64,7 +61,8 @@
               <i class="custom:delete" @click.stop="handleDeleteClick(index, widgetForm.list)" />
             </div>
           </template>
-        </el-row>
+        </div>
+
         <WidgetFormItem
           v-else
           :element="element"
@@ -131,7 +129,7 @@ const handleItemClick = (row: any) => {
 const handleCopyClick = (index: number, list: any[]) => {
   const oldList = JSON.parse(JSON.stringify(props.widgetForm.list))
 
-  let copyData = cloneDeep(list[index])
+  const copyData = cloneDeep(list[index])
 
   emit('update:widgetForm', {
     ...props.widgetForm,
@@ -208,10 +206,10 @@ const handleColMoveAdd = (
 </script>
 <style lang="scss">
 .widget-view {
-  @apply flex relative m-0.5 p-1 border border-dashed border-gray-300;
+  @apply relative m-0.5 p-1 border border-dashed border-gray-300;
 
   &.active {
-    @apply border-solid border-blue-400 outline outline-blue-400;
+    @apply border-solid border-blue-400 outline outline-2 outline-blue-400;
   }
 
   &:hover {
@@ -220,10 +218,10 @@ const handleColMoveAdd = (
 }
 
 .widget-col {
-  @apply flex relative m-0.5 border border-dashed border-gray-300;
+  @apply relative m-0.5 border border-dashed border-gray-300;
 
   &.active {
-    @apply border-solid border-yellow-500 outline outline-yellow-500;
+    @apply border-solid border-yellow-500 outline outline-2 outline-yellow-500;
   }
 
   &:hover {

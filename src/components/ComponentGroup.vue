@@ -1,5 +1,7 @@
 <template>
-  <div class="px-3 py-2 text-sm text-gray-700">{{ title }}</div>
+  <div class="px-3 py-2 text-sm text-gray-700">
+    {{ title }}
+  </div>
   <Draggable
     tag="ul"
     class="m-0 p-3 pt-0 grid grid-cols-2 gap-1"

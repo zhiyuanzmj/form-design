@@ -9,37 +9,31 @@
     :label-width="`${widgetForm.config.labelWidth}px`"
     :hide-required-asterisk="widgetForm.config.hideRequiredAsterisk"
   >
-    <template v-for="(element, index) of widgetForm.list">
-      <template v-if="element.type === 'grid'">
-        <el-row
-          v-if="element.key"
-          :key="element.key"
-          type="flex"
-          :gutter="element.options.gutter ?? 0"
-          :justify="element.options.justify"
-          :align="element.options.align"
+    <template v-for="(element, index) of widgetForm.list" :key="element.key">
+      <div
+        v-if="element.type === 'grid'"
+        grid="~ cols-24"
+        :style="`gap: ${element.options.gutter}px; align-items: ${element.options.align};`"
+      >
+        <div
+          v-for="(col, colIndex) of element.columns"
+          :key="colIndex"
+          :style="`grid-column: span ${col.span}`"
         >
-          <el-col
-            v-for="(col, colIndex) of element.columns"
-            :key="colIndex"
-            :span="col.span ?? 0"
-          >
-            <GenerateFormItem
-              v-for="colItem of col.list"
-              :key="colItem.key"
-              :request="request"
-              :model="model"
-              :updated-model="updatedModel"
-              :element="colItem"
-              :config="data.config"
-              :disabled="disabled"
-            />
-          </el-col>
-        </el-row>
-      </template>
+          <GenerateFormItem
+            v-for="colItem of col.list"
+            :key="colItem.key"
+            :request="request"
+            :model="model"
+            :updated-model="updatedModel"
+            :element="colItem"
+            :config="data.config"
+            :disabled="disabled"
+          />
+        </div>
+      </div>
       <GenerateFormItem
         v-else
-        :key="element.key"
         :model="model"
         :updated-model="updatedModel"
         :element="widgetForm.list[index]"

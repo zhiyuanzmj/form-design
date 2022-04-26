@@ -143,8 +143,12 @@
 
     <el-form-item v-if="hasKey('inline')" label="布局方式">
       <el-radio-group v-model="data.options.inline">
-        <el-radio-button :label="true">行内</el-radio-button>
-        <el-radio-button :label="false">块级</el-radio-button>
+        <el-radio-button :label="true">
+          行内
+        </el-radio-button>
+        <el-radio-button :label="false">
+          块级
+        </el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -165,8 +169,12 @@
 
     <el-form-item v-if="hasKey('options')" label="选项">
       <el-radio-group v-model="data.options.remote">
-        <el-radio-button :label="false">静态数据</el-radio-button>
-        <el-radio-button :label="true">远端数据</el-radio-button>
+        <el-radio-button :label="false">
+          静态数据
+        </el-radio-button>
+        <el-radio-button :label="true">
+          远端数据
+        </el-radio-button>
       </el-radio-group>
       <el-space
         v-if="data.options.remote"
@@ -175,13 +183,19 @@
         style="margin-top: 10px;"
       >
         <el-input v-model="data.options.remoteFunc">
-          <template #prepend> 远端方法 </template>
+          <template #prepend>
+            远端方法
+          </template>
         </el-input>
         <el-input v-model="data.options.props.label">
-          <template #prepend> 标签 </template>
+          <template #prepend>
+            标签
+          </template>
         </el-input>
         <el-input v-model="data.options.props.value">
-          <template #prepend> 值 </template>
+          <template #prepend>
+            值
+          </template>
         </el-input>
       </el-space>
       <template v-else>
@@ -259,7 +273,9 @@
             >
               <template #item="{ element, index }">
                 <div class="flex items-center justify-center gap-2 mb-2">
-                  <el-checkbox :label="element.value">{{ '' }}</el-checkbox>
+                  <el-checkbox :label="element.value">
+                    {{ '' }}
+                  </el-checkbox>
                   <el-input
                     v-model="element.value"
                     :style="{
@@ -333,9 +349,15 @@
     <template v-if="data.type === 'img-upload'">
       <el-form-item label="模式">
         <el-radio-group v-model="data.options.listType">
-          <el-radio-button label="text">text</el-radio-button>
-          <el-radio-button label="picture">picture</el-radio-button>
-          <el-radio-button label="picture-card">picture-card</el-radio-button>
+          <el-radio-button label="text">
+            text
+          </el-radio-button>
+          <el-radio-button label="picture">
+            picture
+          </el-radio-button>
+          <el-radio-button label="picture-card">
+            picture-card
+          </el-radio-button>
         </el-radio-group>
       </el-form-item>
 
@@ -357,10 +379,18 @@
 
       <el-form-item label="上传请求方法">
         <el-radio-group v-model="data.options.method">
-          <el-radio-button label="post">POST</el-radio-button>
-          <el-radio-button label="put">PUT</el-radio-button>
-          <el-radio-button label="get">GET</el-radio-button>
-          <el-radio-button label="delete">DELETE</el-radio-button>
+          <el-radio-button label="post">
+            POST
+          </el-radio-button>
+          <el-radio-button label="put">
+            PUT
+          </el-radio-button>
+          <el-radio-button label="get">
+            GET
+          </el-radio-button>
+          <el-radio-button label="delete">
+            DELETE
+          </el-radio-button>
         </el-radio-group>
       </el-form-item>
     </template>
@@ -368,16 +398,24 @@
     <el-form-item v-if="data.type === 'cascader'" label="远端数据">
       <el-space direction="vertical" alignment="start">
         <el-input v-model="data.options.remoteFunc">
-          <template #prepend> 远端方法 </template>
+          <template #prepend>
+            远端方法
+          </template>
         </el-input>
         <el-input v-model="data.options.props.label">
-          <template #prepend> 标签 </template>
+          <template #prepend>
+            标签
+          </template>
         </el-input>
         <el-input v-model="data.options.props.value">
-          <template #prepend> 值 </template>
+          <template #prepend>
+            值
+          </template>
         </el-input>
         <el-input v-model="data.options.props.children">
-          <template #prepend> 子选项 </template>
+          <template #prepend>
+            子选项
+          </template>
         </el-input>
       </el-space>
     </el-form-item>
@@ -418,9 +456,15 @@
 
       <el-form-item label="对齐方式">
         <el-radio-group v-model="data.options.align">
-          <el-radio-button label="left">居左对齐</el-radio-button>
-          <el-radio-button label="center">居中对齐</el-radio-button>
-          <el-radio-button label="right">巨右对齐</el-radio-button>
+          <el-radio-button label="left">
+            居左对齐
+          </el-radio-button>
+          <el-radio-button label="center">
+            居中对齐
+          </el-radio-button>
+          <el-radio-button label="right">
+            巨右对齐
+          </el-radio-button>
         </el-radio-group>
       </el-form-item>
     </template>
@@ -469,20 +513,16 @@
 
       <el-form-item label="垂直对齐方式">
         <el-radio-group v-model="data.options.align">
-          <el-radio-button label="top">顶部对齐</el-radio-button>
-          <el-radio-button label="middle">居中对齐</el-radio-button>
-          <el-radio-button label="bottom">底部对齐</el-radio-button>
+          <el-radio-button label="initial">
+            顶部对齐
+          </el-radio-button>
+          <el-radio-button label="center">
+            居中对齐
+          </el-radio-button>
+          <el-radio-button label="flex-end">
+            底部对齐
+          </el-radio-button>
         </el-radio-group>
-      </el-form-item>
-
-      <el-form-item label="水平排列方式">
-        <el-select v-model="data.options.justify">
-          <el-option value="start" label="左对齐" />
-          <el-option value="end" label="右对齐" />
-          <el-option value="center" label="居中" />
-          <el-option value="space-around" label="两侧间隔相等" />
-          <el-option value="space-between" label="两端对齐" />
-        </el-select>
       </el-form-item>
     </template>
 
@@ -523,12 +563,18 @@
       </el-form-item>
 
       <template v-if="hasKey('rules')">
-        <h4 class="pb-2 text-gray-700 border-0 border-b-1 border-solid border-gray-200">验证规则</h4>
+        <h4 class="pb-2 text-gray-700 border-0 border-b-1 border-solid border-gray-200">
+          验证规则
+        </h4>
 
         <el-form-item label="触发时机">
           <el-radio-group v-model="data.options.rules.trigger">
-            <el-radio-button label="blur">Blur</el-radio-button>
-            <el-radio-button label="change">Change</el-radio-button>
+            <el-radio-button label="blur">
+              Blur
+            </el-radio-button>
+            <el-radio-button label="change">
+              Change
+            </el-radio-button>
           </el-radio-group>
         </el-form-item>
 
@@ -558,21 +604,51 @@
 
         <el-form-item label="校验类型">
           <el-select v-model="data.options.rules.type">
-            <el-option value="string">字符串</el-option>
-            <el-option value="number">数字</el-option>
-            <el-option value="boolean">布尔值</el-option>
-            <el-option value="method">方法</el-option>
-            <el-option value="regexp">正则表达式</el-option>
-            <el-option value="integer">整数</el-option>
-            <el-option value="float">浮点数</el-option>
-            <el-option value="array">数组</el-option>
-            <el-option value="object">对象</el-option>
-            <el-option value="enum">枚举</el-option>
-            <el-option value="date">日期</el-option>
-            <el-option value="url">URL地址</el-option>
-            <el-option value="hex">十六进制</el-option>
-            <el-option value="email">邮箱地址</el-option>
-            <el-option value="any">任意类型</el-option>
+            <el-option value="string">
+              字符串
+            </el-option>
+            <el-option value="number">
+              数字
+            </el-option>
+            <el-option value="boolean">
+              布尔值
+            </el-option>
+            <el-option value="method">
+              方法
+            </el-option>
+            <el-option value="regexp">
+              正则表达式
+            </el-option>
+            <el-option value="integer">
+              整数
+            </el-option>
+            <el-option value="float">
+              浮点数
+            </el-option>
+            <el-option value="array">
+              数组
+            </el-option>
+            <el-option value="object">
+              对象
+            </el-option>
+            <el-option value="enum">
+              枚举
+            </el-option>
+            <el-option value="date">
+              日期
+            </el-option>
+            <el-option value="url">
+              URL地址
+            </el-option>
+            <el-option value="hex">
+              十六进制
+            </el-option>
+            <el-option value="email">
+              邮箱地址
+            </el-option>
+            <el-option value="any">
+              任意类型
+            </el-option>
           </el-select>
         </el-form-item>
       </template>

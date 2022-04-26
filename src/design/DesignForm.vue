@@ -22,13 +22,19 @@
       <header b="0 b solid gray-200" flex gap-2 items-center justify-end h-11 py-0 px-2>
         <slot />
         <el-button v-if="generateJson" type="text" @click="handleGenerateJson">
-          <template #icon><i class="ep:edit" /></template>修改
+          <template #icon>
+            <i class="ep:edit" />
+          </template>修改
         </el-button>
         <el-button v-if="clearable" type="text" @click="handleClearable">
-          <template #icon><i class="custom:clearable" /></template>清空
+          <template #icon>
+            <i class="custom:clearable" />
+          </template>清空
         </el-button>
         <el-button v-if="preview" type="text" @click="previewVisible = true">
-          <template #icon><i class="custom:preview" /></template>预览
+          <template #icon>
+            <i class="custom:preview" />
+          </template>预览
         </el-button>
       </header>
 
@@ -60,17 +66,21 @@
     </aside>
 
     <el-dialog v-model="previewVisible" destroy-on-close title="预览" :z-index="2000" :width="800" @close="dataVisible=false">
-      <CodeEditor v-if="dataVisible" v-model="generateJsonTemplate" />
+      <CodeEditor v-show="dataVisible" v-model="generateJsonTemplate" />
       <GenerateForm
-        v-else
+        v-show="!dataVisible"
         ref="generateFormRef"
         :request="request"
         :data="widgetForm"
       />
 
       <template #footer>
-        <el-button @click="dataVisible?handleCopyClick(generateJsonTemplate):handleReset()">{{ dataVisible?'复制':'重置' }}</el-button>
-        <el-button type="primary" @click="handleGetData">{{ dataVisible?'返回预览':'获取数据' }}</el-button>
+        <el-button @click="dataVisible?handleCopyClick(generateJsonTemplate):handleReset()">
+          {{ dataVisible?'复制':'重置' }}
+        </el-button>
+        <el-button type="primary" @click="handleGetData">
+          {{ dataVisible?'返回预览':'获取数据' }}
+        </el-button>
       </template>
     </el-dialog>
 
@@ -78,8 +88,12 @@
       <CodeEditor v-model="generateJsonTemplate" />
 
       <template #footer>
-        <el-button @click="handleCopyClick(generateJsonTemplate)">复制</el-button>
-        <el-button type="primary" @click="handleUploadJson(generateJsonTemplate)">确认修改</el-button>
+        <el-button @click="handleCopyClick(generateJsonTemplate)">
+          复制
+        </el-button>
+        <el-button type="primary" @click="handleUploadJson(generateJsonTemplate)">
+          确认修改
+        </el-button>
       </template>
     </el-dialog>
   </section>
@@ -162,7 +176,7 @@ const handleClearable = () => {
 }
 
 let dataVisible = $ref(false)
-let generateFormRef = $ref<InstanceType<typeof GenerateForm>|null>(null)
+const generateFormRef = $ref<InstanceType<typeof GenerateForm>|null>(null)
 const handleGetData = async() => {
   dataVisible = !dataVisible
   if (!dataVisible) return
@@ -176,7 +190,7 @@ const handleCopyClick = (text: string) => {
   ElMessage.success({ message: 'Copy成功' })
 }
 
-let previewVisible = $ref(false)
+const previewVisible = $ref(false)
 
 defineExpose({
   getJson: () => $$(widgetForm).value,
