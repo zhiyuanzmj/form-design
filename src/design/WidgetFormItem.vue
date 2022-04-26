@@ -269,11 +269,11 @@
     </el-form-item>
 
     <template v-if="selectWidget?.key === element.key">
-      <div class="absolute z-10 right-0 -bottom-0.5 bg-blue-400 text-white flex gap-1 p-1 text-sm cursor-pointer">
+      <div class="absolute z-10 right-0 -bottom-0.5 bg-blue-500 text-white flex gap-1 p-1 text-sm cursor-pointer">
         <i class="custom:copy" @click.stop="$emit('copy')" />
         <i class="custom:delete" @click.stop="$emit('delete')" />
       </div>
-      <div class="absolute z-10 left-0 -top-0.5 bg-blue-400 text-white p-1 cursor-move text-sm">
+      <div class="absolute z-10 left-0 -top-0.5 bg-blue-500 text-white p-1 cursor-move text-sm">
         <i class="custom:move" />
       </div>
     </template>

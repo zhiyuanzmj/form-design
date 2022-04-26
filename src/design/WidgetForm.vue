@@ -209,11 +209,11 @@ const handleColMoveAdd = (
   @apply relative m-0.5 p-1 border border-dashed border-gray-300;
 
   &.active {
-    @apply border-solid border-blue-400 outline outline-2 outline-blue-400;
+    @apply border-solid border-blue-500 outline outline-2 outline-blue-500;
   }
 
   &:hover {
-    @apply border-blue-400 bg-blue-50;
+    @apply border-blue-500 bg-blue-50;
   }
 }
 

@@ -748,6 +748,6 @@ export default defineComponent({
 </script>
 <style>
   .ghost {
-    @apply outline outline-dashed outline-blue-400;
+    @apply outline outline-dashed outline-blue-500;
   }
 </style>

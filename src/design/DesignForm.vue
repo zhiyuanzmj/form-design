@@ -209,7 +209,7 @@ defineExpose({
       b-0 b-b-2 b-solid b-white;
 
     &.active {
-      @apply b-blue-400;
+      @apply b-blue-500;
     }
   }
 </style>

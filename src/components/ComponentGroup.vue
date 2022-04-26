@@ -14,7 +14,7 @@
     <template #item="{ element }">
       <li
         v-if="fields.includes(element.type)"
-        class="bg-gray-100 text-xs text-gray-700 hover:text-blue-400 leading-8 cursor-move -outline-offset-1 hover:outline-dashed outline-1 outline-blue-400 list-none flex items-center"
+        class="bg-gray-100 text-xs text-gray-700 hover:text-blue-500 leading-8 cursor-move -outline-offset-1 hover:outline-dashed outline-1 outline-blue-500 list-none flex items-center"
       >
         <i :class="'custom:'+element.type" class="ml-2 mr-1" />
         <span>{{ element.label }}</span>

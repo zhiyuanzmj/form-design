@@ -43,7 +43,7 @@ export default defineConfig({
       mode: 'dist-chunk',
       theme: {
         colors: {
-          blue: { 400: '#409EFF' },
+          blue: { 500: '#409EFF' },
         },
       },
       transformers: [
