@@ -84,7 +84,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="generateJsonVisible" :model-append-to-body="false" append-to-body title="修改JSON" :z-index="2000" :width="800">
+    <el-dialog v-model="generateJsonVisible" append-to-body title="修改JSON" :z-index="2000" :width="800">
       <CodeEditor v-model="generateJsonTemplate" />
 
       <template #footer>
@@ -102,7 +102,6 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
 import { ElMessage } from 'element-plus'
-import 'element-plus/theme-chalk/el-message.css'
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import GenerateForm from '../generate/GenerateForm.vue'
 import WidgetFormElement from './WidgetForm.vue'

@@ -13,7 +13,7 @@
     <Draggable
       class="flex-1 m-2 bg-white shadow p-1"
       item-key="key"
-      handle=".cursor-move"
+      handle="[cursor-move]"
       :animation="200"
       group="form-design"
       :list="widgetForm.list"
@@ -22,8 +22,8 @@
       <template #item="{ element, index }">
         <div
           v-if="element.type === 'grid'"
-          class="widget-col"
-          p-1 grid="~ cols-24"
+          class="widget-view col"
+          grid="~ cols-24"
           :class="{ active: widgetFormSelect?.key === element.key }"
           :style="`gap: ${element.options.gutter}px; align-items: ${element.options.align};`"
           @click="handleItemClick(element)"
@@ -34,19 +34,19 @@
             class="bg-white min-h-12 border border-dashed border-gray-300"
             :style="`grid-column: span ${col.span}`"
             item-key="key"
-            handle=".cursor-move"
+            handle="[cursor-move]"
             :animation="200"
             group="form-design"
             :no-transition-on-drag="true"
             :list="col.list"
             @add="handleColMoveAdd($event, element, colIndex)"
           >
-            <template #item="{ element, index }">
+            <template #item="{ element: colElement, index }">
               <WidgetFormItem
-                :element="element"
+                :element="colElement"
                 :config="widgetForm.config"
                 :select-widget="widgetFormSelect"
-                @click.stop="handleItemClick(element)"
+                @click.stop="handleItemClick(colElement)"
                 @copy="handleCopyClick(index, col.list)"
                 @delete="handleDeleteClick(index, col.list)"
               />
@@ -79,128 +79,39 @@
 
 <script lang="ts" setup>
 import Draggable from 'vuedraggable'
-import { cloneDeep } from 'lodash-es'
 import WidgetFormItem from './WidgetFormItem.vue'
 import type { WidgetForm } from '@/config'
+import { cloneComponent } from '@/components/ComponentGroup.vue'
 
-const handleListInsert = (key: string, list: any[], obj: any) => {
-  const newList: any[] = []
-  list.forEach((item) => {
-    if (item.key === key) {
-      newList.push(item)
-      newList.push(obj)
-    }
-    else {
-      if (item.type === 'grid') {
-        item.columns = item.columns.map((col: any) => ({
-          ...col,
-          list: handleListInsert(key, col.list, obj),
-        }))
-      }
-      newList.push(item)
-    }
-  })
-  return newList
-}
-
-const handleListDelete = (key: string, list: any[]) => {
-  const newList: any[] = []
-  list.forEach((item) => {
-    if (item.key !== key) {
-      if (item.type === 'grid') {
-        item.columns = item.columns.map((col: any) => ({
-          ...col,
-          list: handleListDelete(key, col.list),
-        }))
-      }
-      newList.push(item)
-    }
-  })
-  return newList
-}
-
-const props = defineProps<{ widgetForm: WidgetForm; widgetFormSelect?: any }>()
+const { widgetForm } = defineProps<{ widgetForm: WidgetForm; widgetFormSelect?: any }>()
 const emit = defineEmits(['update:widgetForm', 'update:widgetFormSelect'])
+
+const handleCopyClick = (index: number, list: any[]) => {
+  list.splice(index + 1, 0, cloneComponent(list[index]))
+  emit('update:widgetFormSelect', list[index + 1])
+}
+
+const handleDeleteClick = (index: number, list: any[]) => {
+  emit('update:widgetFormSelect', list.length - 1 === index
+    ? index === 0 ? null : list[index - 1]
+    : list[index + 1])
+
+  list.splice(index, 1)
+}
 
 const handleItemClick = (row: any) => {
   emit('update:widgetFormSelect', row)
 }
 
-const handleCopyClick = (index: number, list: any[]) => {
-  const oldList = JSON.parse(JSON.stringify(props.widgetForm.list))
-
-  const copyData = cloneDeep(list[index])
-
-  emit('update:widgetForm', {
-    ...props.widgetForm,
-    list: handleListInsert(list[index].key, oldList, copyData),
-  })
-
-  emit('update:widgetFormSelect', copyData)
-}
-
-const handleDeleteClick = (index: number, list: any[]) => {
-  const oldList = JSON.parse(JSON.stringify(props.widgetForm.list))
-
-  if (list.length - 1 === index) {
-    if (index === 0)
-      nextTick(() => emit('update:widgetFormSelect', null))
-
-    else
-      emit('update:widgetFormSelect', list[index - 1])
-  }
-  else {
-    emit('update:widgetFormSelect', list[index + 1])
-  }
-
-  emit('update:widgetForm', {
-    ...props.widgetForm,
-    list: handleListDelete(list[index].key, oldList),
-  })
-}
-
-const handleMoveAdd = (event: any) => {
-  const { newIndex } = event
-
-  const list = JSON.parse(JSON.stringify(props.widgetForm.list))
-  list[newIndex] = {
-    ...list[newIndex],
-    rules: [],
-  }
-
-  if (
-    list[newIndex].type === 'radio'
-        || list[newIndex].type === 'checkbox'
-        || list[newIndex].type === 'select'
-  ) {
-    list[newIndex] = {
-      ...list[newIndex],
-      options: {
-        ...list[newIndex].options,
-        options: list[newIndex].options.options.map((item: any) => ({
-          ...item,
-        })),
-      },
-    }
-  }
-
-  if (list[newIndex].type === 'grid') {
-    list[newIndex] = {
-      ...list[newIndex],
-      columns: list[newIndex].columns.map((item: any) => ({ ...item })),
-    }
-  }
-  emit('update:widgetForm', { ...props.widgetForm, list })
-
-  emit('update:widgetFormSelect', list[newIndex])
+const handleMoveAdd = ({ newIndex }: any) => {
+  emit('update:widgetFormSelect', widgetForm.list[newIndex])
 }
 
 const handleColMoveAdd = (
-  event: any,
+  { newIndex }: any,
   row: any,
   index: string | number | symbol,
 ) => {
-  const { newIndex } = event
   emit('update:widgetFormSelect', row.columns[index].list[newIndex])
 }
 </script>
@@ -210,22 +121,18 @@ const handleColMoveAdd = (
 
   &.active {
     @apply border-solid border-blue-500 outline outline-2 outline-blue-500;
+
+    &.col {
+      @apply border-yellow-500 outline-yellow-500;
+    }
   }
 
   &:hover {
     @apply border-blue-500 bg-blue-50;
-  }
-}
 
-.widget-col {
-  @apply relative m-0.5 border border-dashed border-gray-300;
-
-  &.active {
-    @apply border-solid border-yellow-500 outline outline-2 outline-yellow-500;
-  }
-
-  &:hover {
-    @apply border-yellow-500 bg-yellow-50;
+    &.col {
+      @apply border-yellow-500 bg-yellow-50;
+    }
   }
 }
 </style>

@@ -267,7 +267,7 @@
             <Draggable
               item-key="index"
               ghost-class="ghost"
-              handle=".cursor-move"
+              handle="[cursor-move]"
               :group="{ name: 'options' }"
               :list="data.options.options"
             >

@@ -7,7 +7,7 @@
     class="m-0 p-3 pt-0 grid grid-cols-2 gap-1"
     item-key="type"
     :group="{ name: 'form-design', pull: 'clone', put: false }"
-    :clone="clone"
+    :clone="cloneComponent"
     :sort="false"
     :list="list"
   >
@@ -22,20 +22,20 @@
     </template>
   </Draggable>
 </template>
-
 <script lang="ts" setup>
-import { cloneDeep } from 'lodash-es'
 import Draggable from 'vuedraggable'
+import { cloneDeep } from 'lodash-es'
 
 defineProps<{ fields: any[]; title: string; list: any[] }>()
+</script>
 
-function clone(params: any) {
+<script lang="ts">
+export function cloneComponent(params: any) {
   const key = Math.random().toString(36).substring(2, 9)
   return cloneDeep({
     ...params,
     key,
     model: `${params.type}_${key}`,
-    rules: [],
   })
 }
 </script>
