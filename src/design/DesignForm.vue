@@ -18,8 +18,8 @@
       />
     </aside>
 
-    <main b="0 x solid gray-200" flex="~ 1 col nowrap">
-      <header b="0 b solid gray-200" flex gap-2 items-center justify-end h-11 py-0 px-2>
+    <main border="0 x solid gray-200" flex="~ 1 col nowrap">
+      <header border="0 b solid gray-200" flex gap-2 items-center justify-end h-11 py-0 px-2>
         <slot />
         <el-button v-if="generateJson" type="text" @click="handleGenerateJson">
           <template #icon>
@@ -91,7 +91,7 @@
         <el-button @click="handleCopyClick(generateJsonTemplate)">
           复制
         </el-button>
-        <el-button type="primary" @click="handleUploadJson(generateJsonTemplate)">
+        <el-button type="primary" @click="handleUploadJson">
           确认修改
         </el-button>
       </template>

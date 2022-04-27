@@ -29,8 +29,8 @@
           @click="handleItemClick(element)"
         >
           <Draggable
-            v-for="(col, colIndex) of element.columns"
-            :key="colIndex"
+            v-for="(col, columnIndex) of element.columns"
+            :key="columnIndex"
             class="bg-white min-h-12 border border-dashed border-gray-300"
             :style="`grid-column: span ${col.span}`"
             item-key="key"
@@ -39,16 +39,16 @@
             group="form-design"
             :no-transition-on-drag="true"
             :list="col.list"
-            @add="handleColMoveAdd($event, element, colIndex)"
+            @add="handleMoveAdd($event, col.list)"
           >
-            <template #item="{ element: colElement, index }">
+            <template #item="{ element: colElement, index: colIndex }">
               <WidgetFormItem
                 :element="colElement"
                 :config="widgetForm.config"
                 :select-widget="widgetFormSelect"
                 @click.stop="handleItemClick(colElement)"
-                @copy="handleCopyClick(index, col.list)"
-                @delete="handleDeleteClick(index, col.list)"
+                @copy="handleCopyClick(colIndex, col.list)"
+                @delete="handleDeleteClick(colIndex, col.list)"
               />
             </template>
           </Draggable>
@@ -92,27 +92,18 @@ const handleCopyClick = (index: number, list: any[]) => {
 }
 
 const handleDeleteClick = (index: number, list: any[]) => {
+  list.splice(index, 1)
   emit('update:widgetFormSelect', list.length - 1 === index
     ? index === 0 ? null : list[index - 1]
     : list[index + 1])
-
-  list.splice(index, 1)
 }
 
 const handleItemClick = (row: any) => {
   emit('update:widgetFormSelect', row)
 }
 
-const handleMoveAdd = ({ newIndex }: any) => {
-  emit('update:widgetFormSelect', widgetForm.list[newIndex])
-}
-
-const handleColMoveAdd = (
-  { newIndex }: any,
-  row: any,
-  index: string | number | symbol,
-) => {
-  emit('update:widgetFormSelect', row.columns[index].list[newIndex])
+const handleMoveAdd = ({ newIndex }: any, list = widgetForm.list) => {
+  emit('update:widgetFormSelect', list[newIndex])
 }
 </script>
 <style lang="scss">
