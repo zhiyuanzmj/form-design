@@ -1,5 +1,8 @@
 {
   "extends": [
     "@antfu"
-  ]
+  ],
+  "rules": {
+    "vue/no-mutating-props": "off"
+  }
 }

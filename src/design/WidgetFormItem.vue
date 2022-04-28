@@ -1,7 +1,62 @@
+<script lang="ts" setup>
+import Draggable from 'vuedraggable'
+import { cloneWidget } from '@/components/ComponentGroup.vue'
+
+const { element, index, list, ...props } = defineProps<{
+  list: any
+  element: any
+  index: number
+  selectWidget: any
+}>()
+defineEmits(['itemClick', 'delete', 'update:selectWidget'])
+
+let selectWidget = $(useVModel(props, 'selectWidget'))
+
+const handleCopyClick = () => {
+  list.splice(index + 1, 0, cloneWidget(list[index]))
+  selectWidget = list[index + 1]
+}
+
+const handleDeleteClick = () => {
+  list.splice(index, 1)
+  selectWidget = list[list.length === index ? (index - 1) : index]
+}
+</script>
+
 <template>
-  <div class="widget-view" :class="{ active: selectWidget?.key === element.key }">
+  <div
+    class="widget-view"
+    :class="{ active: selectWidget?.key === element.key ,col:element.type === 'grid'}"
+    :style="element.type === 'grid'?`gap: ${element.options.gutter}px; align-items: ${element.options.align};`:''"
+    @click.stop="selectWidget=element"
+  >
+    <template v-if="element.type === 'grid'">
+      <Draggable
+        v-for="(col, key) of element.columns"
+        :key="key"
+        class="bg-white min-h-12 border border-dashed border-gray-300"
+        :style="`grid-column: span ${col.span}`"
+        item-key="key"
+        handle="[cursor-move]"
+        :animation="200"
+        group="form-design"
+        :no-transition-on-drag="true"
+        :list="col.list"
+        @add="selectWidget=col.list[$event.newIndex]"
+      >
+        <template #item="{ element: colElement, index: colIndex }">
+          <WidgetFormItem
+            v-model:selectWidget="selectWidget"
+            :element="colElement"
+            :list="col.list"
+            :index="colIndex"
+          />
+        </template>
+      </Draggable>
+    </template>
+
     <el-table
-      v-if="element.type === 'table'"
+      v-else-if="element.type === 'table'"
       class="w-0 flex-1"
       border
       :data="element.options.defaultValue"
@@ -269,24 +324,13 @@
     </el-form-item>
 
     <template v-if="selectWidget?.key === element.key">
-      <div absolute z-10 left-0 top="-.5" bg-blue-500 text-white p=".5 l-0 t-0" cursor-move>
+      <div absolute z-10 left-0 top="-.5" bg-blue-500 text-white p=".5 l-0 t-0" cursor-move :class="{'bg-yellow-500':element.type === 'grid'}">
         <i class="eva:move-outline" text-lg />
       </div>
-      <div absolute z-10 right-0 bottom="-0.5" bg-blue-500 flex gap-1 p="1 r-.5" text-white cursor-pointer>
-        <i class="fa6-regular:clone" @click.stop="$emit('copy')" />
-        <i class="fa6-regular:trash-can" @click.stop="$emit('delete')" />
+      <div absolute z-10 right-0 bottom="-0.5" bg-blue-500 flex gap-1 p="1 r-.5" text-white cursor-pointer :class="{'bg-yellow-500':element.type === 'grid'}">
+        <i class="fa6-regular:clone" @click.stop="handleCopyClick()" />
+        <i class="fa6-regular:trash-can" @click.stop="handleDeleteClick()" />
       </div>
     </template>
   </div>
 </template>
-
-<script lang="ts" setup>
-import type { WidgetForm } from '@/config'
-
-defineProps<{
-  config: WidgetForm['config']
-  element: any
-  selectWidget?: any
-}>()
-defineEmits(['copy', 'delete'])
-</script>

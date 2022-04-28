@@ -38,26 +38,26 @@
         </el-button>
       </header>
 
-      <WidgetFormElement
+      <WidgetFormVue
         ref="widgetFormRef"
-        v-model:widgetForm="widgetForm"
-        v-model:widgetFormSelect="widgetFormSelect"
+        v-bind="widgetForm"
+        v-model:selectWidget="selectWidget"
       />
     </main>
 
     <aside relative w-75 flex="~ col">
       <header border="0 b-1 gray-200" grid="~ cols-2" min-h-11 px-2>
-        <div :class="`${!tab?'active':''} config-tab`" @click="tab = 0">
+        <div :class="[{active:!tab}, 'config-tab']" @click="tab = 0">
           字段属性
         </div>
-        <div :class="`${tab?'active':''} config-tab`" @click="tab = 1">
+        <div :class="[{active:tab}, 'config-tab']" @click="tab = 1">
           表单属性
         </div>
       </header>
 
       <WidgetConfig
         v-show="!tab"
-        v-model:select="widgetFormSelect"
+        v-model:select="selectWidget"
       />
       <FormConfig
         v-show="tab"
@@ -104,7 +104,7 @@ import type { PropType } from 'vue'
 import { ElMessage } from 'element-plus'
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import GenerateForm from '../generate/GenerateForm.vue'
-import WidgetFormElement from './WidgetForm.vue'
+import WidgetFormVue from './WidgetForm.vue'
 import WidgetConfig from './WidgetConfig.vue'
 import FormConfig from './FormConfig.vue'
 import ComponentGroup from '@/components/ComponentGroup.vue'
@@ -145,8 +145,8 @@ defineProps({
 })
 
 let tab = $ref(0)
-let widgetFormSelect = $ref<any>()
-watch(() => widgetFormSelect, (val) => {
+let selectWidget = $ref<any>()
+watch(() => selectWidget, (val) => {
   tab = val ? 0 : 1
 })
 
@@ -156,7 +156,7 @@ let generateJsonTemplate = $ref(JSON.stringify(getWidgetForm(), null, 2))
 const handleUploadJson = () => {
   try {
     widgetForm = JSON.parse(generateJsonTemplate)
-    widgetFormSelect = widgetForm.list?.[0]
+    selectWidget = widgetForm.list?.[0]
     generateJsonVisible = false
     ElMessage.success('修改成功')
   }
@@ -171,7 +171,7 @@ const handleGenerateJson = () =>
 
 const handleClearable = () => {
   widgetForm = getWidgetForm()
-  widgetFormSelect = undefined
+  selectWidget = undefined
 }
 
 let dataVisible = $ref(false)
@@ -195,7 +195,7 @@ defineExpose({
   getJson: () => $$(widgetForm).value,
   setJson: (json: WidgetForm) => {
     widgetForm = json
-    widgetFormSelect = json.list?.[0]
+    selectWidget = json.list?.[0]
   },
   clear: handleClearable,
 })

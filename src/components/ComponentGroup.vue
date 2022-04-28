@@ -7,7 +7,7 @@
     class="m-0 p-3 pt-0 grid grid-cols-2 gap-1"
     item-key="type"
     :group="{ name: 'form-design', pull: 'clone', put: false }"
-    :clone="cloneComponent"
+    :clone="cloneWidget"
     :sort="false"
     :list="list"
   >
@@ -30,12 +30,18 @@ defineProps<{ fields: any[]; title: string; list: any[] }>()
 </script>
 
 <script lang="ts">
-export function cloneComponent(params: any) {
+export function cloneWidget(params: any) {
   const key = Math.random().toString(36).substring(2, 9)
-  return cloneDeep({
+  params = cloneDeep({
     ...params,
     key,
     model: `${params.type}_${key}`,
   })
+  if (params.type === 'grid') {
+    params.columns.forEach((i: any) => {
+      i.list = i.list.map(cloneWidget)
+    })
+  }
+  return params
 }
 </script>
