@@ -10,30 +10,7 @@
     :hide-required-asterisk="widgetForm.config.hideRequiredAsterisk"
   >
     <template v-for="(element, index) of widgetForm.list" :key="element.key">
-      <div
-        v-if="element.type === 'grid'"
-        grid="~ cols-24"
-        :style="`gap: ${element.options.gutter}px; align-items: ${element.options.align};`"
-      >
-        <div
-          v-for="(col, colIndex) of element.columns"
-          :key="colIndex"
-          :style="`grid-column: span ${col.span}`"
-        >
-          <GenerateFormItem
-            v-for="colItem of col.list"
-            :key="colItem.key"
-            :request="request"
-            :model="model"
-            :updated-model="updatedModel"
-            :element="colItem"
-            :config="data.config"
-            :disabled="disabled"
-          />
-        </div>
-      </div>
       <GenerateFormItem
-        v-else
         :model="model"
         :updated-model="updatedModel"
         :element="widgetForm.list[index]"

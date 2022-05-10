@@ -1,6 +1,28 @@
 <template>
+  <div
+    v-if="element.type === 'grid'"
+    grid="~ cols-24"
+    :style="`gap: ${element.options.gutter}px; align-items: ${element.options.align};`"
+  >
+    <div
+      v-for="(col, colIndex) of element.columns"
+      :key="colIndex"
+      :style="`grid-column: span ${col.span}`"
+    >
+      <GenerateFormItem
+        v-for="colItem of col.list"
+        :key="colItem.key"
+        :request="request"
+        :model="model"
+        :updated-model="updatedModel"
+        :element="colItem"
+        :config="config"
+        :disabled="disabled"
+      />
+    </div>
+  </div>
   <el-table
-    v-if="element.type === 'table'"
+    v-else-if="element.type === 'table'"
     border
     class="mb-4.5"
     :data="element.options.defaultValue"
